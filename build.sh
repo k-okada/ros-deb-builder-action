@@ -31,20 +31,20 @@ case $ROS_DISTRO in
   melodic|noetic)
     BLOOM=ros
     ROS_DEB="$ROS_DISTRO-"
-    curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /home/runner/ros-archive-keyring.gpg
-    set -- --extra-repository="deb http://packages.ros.org/ros/ubuntu $DEB_DISTRO main" --extra-repository-key=/home/runner/ros-archive-keyring.gpg "$@"
+    curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o $HOME/ros-archive-keyring.gpg
+    set -- --extra-repository="deb http://packages.ros.org/ros/ubuntu $DEB_DISTRO main" --extra-repository-key=$HOME/ros-archive-keyring.gpg "$@"
     ;;
   *)
     # assume ROS 2 so we don't have to list versions
     BLOOM=ros
     ROS_DEB="$ROS_DISTRO-"
-    curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /home/runner/ros-archive-keyring.gpg
-    set -- --extra-repository="deb http://packages.ros.org/ros2/ubuntu $DEB_DISTRO main" --extra-repository-key=/home/runner/ros-archive-keyring.gpg "$@"
+    curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o $HOME/ros-archive-keyring.gpg
+    set -- --extra-repository="deb http://packages.ros.org/ros2/ubuntu $DEB_DISTRO main" --extra-repository-key=$HOME/ros-archive-keyring.gpg "$@"
     ;;
 esac
 
 # make output directory
-mkdir -p /home/runner/apt_repo
+mkdir -p $HOME/apt_repo
 
 echo "::group::Add unreleased packages to rosdep"
 
@@ -84,8 +84,8 @@ for PKG_PATH in setup_files ros_environment $(catkin_topological_order --only-fo
   cd "$PKG_PATH"
 
   if ! bloom-generate "${BLOOM}debian" --os-name="$DISTRIBUTION" --os-version="$DEB_DISTRO" --ros-distro="$ROS_DISTRO"; then
-    echo "- bloom-generate of $(basename "$PKG_PATH")" >> /home/runner/apt_repo/Failed.md
-    exit 0
+    echo "- bloom-generate of $(basename "$PKG_PATH")" >> $HOME/apt_repo/Failed.md
+    exit 1
   fi
   # because bloom needs to see the ROS distro as "debian" to resolve rosdep keys the generated files
   # all use the "debian" term, but we want this distribution to be called "one" instead
@@ -102,12 +102,12 @@ for PKG_PATH in setup_files ros_environment $(catkin_topological_order --only-fo
 
   # dpkg-source-opts: no need for upstream.tar.gz
   if ! sbuild --chroot-mode=unshare --no-clean-source --no-run-lintian \
-    --dpkg-source-opts="-Zgzip -z1 --format=1.0 -sn" --build-dir=/home/runner/apt_repo \
-    --extra-package=/home/runner/apt_repo \
+    --dpkg-source-opts="-Zgzip -z1 --format=1.0 -sn" --build-dir=$HOME/apt_repo \
+    --extra-package=$HOME/apt_repo \
     $EXTRA_DEPENDS \
     "$@"; then
-    echo "- [$(catkin_topological_order --only-names)](https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$DEB_DISTRO-one/$(basename /home/runner/apt_repo/$(head -n1 debian/changelog | cut -d' ' -f1)_*-*T*.build))" >> /home/runner/apt_repo/Failed.md
-    exit 0
+    echo "- [$(catkin_topological_order --only-names)](https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$DEB_DISTRO-one/$(basename $HOME/apt_repo/$(head -n1 debian/changelog | cut -d' ' -f1)_*-*T*.build))" >> $HOME/apt_repo/Failed.md
+    exit 1
   fi
 
   if [ $PKG_PATH = setup_files ]; then

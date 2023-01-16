@@ -5,9 +5,9 @@ set -ex
 
 echo "::group::Setup deb repository"
 
-vcs export src --exact-with-tags > /home/runner/apt_repo/sources.repos
+vcs export src --exact-with-tags > $HOME/apt_repo/sources.repos
 
-cd /home/runner/apt_repo
+cd $HOME/apt_repo
 apt-ftparchive packages . > Packages
 apt-ftparchive release . > Release
 
