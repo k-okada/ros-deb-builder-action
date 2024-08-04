@@ -94,6 +94,17 @@ build_deb(){
   # Set the version based on the checked out tag that contain at least on digit
   # strip any leading non digits as they are not part of the version number
   description=`( git describe --tag --match "*[0-9]*" 2>/dev/null || echo 0 ) | sed 's@^[^0-9]*@@'`
+  if [ "$description" = "0" ]; then
+      # git describe --tags faild, clone necessary commits
+      # https://stackoverflow.com/questions/66349002/get-latest-tag-git-describe-tags-when-repo-is-cloned-with-depth-1
+      # '[0-9]*' matches any tags start from number, to find tag like v0.1.1, we added '??'
+      TAG=$(git ls-remote origin "refs/tags/??[0-9]*" | cut -f 2- | sort -V | tail -1)
+      BRANCH_NAME=$(git symbolic-ref HEAD 2>/dev/null | sed s@refs/heads/@@)
+      git fetch --filter=tree:0 --shallow-exclude $TAG origin $BRANCH_NAME
+      git fetch --filter=tree:0 --deepen=1 origin $BRANCH_NAME
+      git fetch --filter=tree:0 --depth=1 origin $TAG:$TAG
+      description=`( git describe --tag --match "*[0-9]*" 2>/dev/null || echo 0 ) | sed 's@[^.0-9].*$@@'`
+  fi
 
   bloom_log=${pkg_name}_${description}-bloom_generate.log
 
