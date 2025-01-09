@@ -169,6 +169,9 @@ build_deb(){
   # create logger directgory for venv
   SBUILD_OPTS="$SBUILD_OPTS --chroot-setup-commands='mkdir -p /sbuild-nonexistent/.ros/log/; chmod a+rw -R /sbuild-nonexistent/'"
 
+  # Canonical dropped the Debian ROS packages from 24.04 for political reasons. Wow.
+  test "$DEB_DISTRO" = "noble" && SBUILD_OPTS="$SBUILD_OPTS --extra-repository=\"deb [trusted=yes] https://ppa.launchpadcontent.net/v-launchpad-jochen-sprickerhof-de/ros/ubuntu $DEB_DISTRO main\""
+
   # dpkg-source-opts: no need for upstream.tar.gz
   eval sbuild $SBUILD_OPTS
   sbuild_success=$?
