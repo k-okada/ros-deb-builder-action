@@ -16,6 +16,10 @@ inputs:
     description: If set to true, all previous commits on the target branch will be discarded.
     required: false
     default: false
+  SSH_PRIVATE_KEY:
+    description: The private key to authenticate on SSH. Don't include this directly in the workflow file, instead you must use Secrets.
+    required: false
+    default: false
 runs:
   using: composite
   steps:
@@ -34,17 +38,29 @@ runs:
         # git config --global http.version HTTP/1.1
         # git config --global pack.packSizeLimit 100m
         # find /home/runner/apt_repo -type f -size +40M -exec du -h {} \; -exec rm {} \;
-        ## debug
-        for i in {1..10}; do echo $i; truncate -s 50M /home/runner/apt_repo/$i.deb; done
       shell: sh
-    - name: Deploy
-      if: ${{ inputs.GITHUB_TOKEN }}
+    - name: Deploy with https
+      if: ${{ inputs.GITHUB_TOKEN && inputs.SSH_PRIVATE_KEY == 'false' }}
       uses: s0/git-publish-subdir-action@develop
       env:
         REPO: self
         BRANCH: ${{ inputs.BRANCH }}
         FOLDER: /home/runner/apt_repo
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        SSH_PRIVATE_KEY: ${{ inputs.SSH_PRIVATE_KEY }}
+        SQUASH_HISTORY: ${{ inputs.SQUASH_HISTORY }}
+        # GIT_TRACE_PACKET: 1
+        # GIT_TRACE: 1
+        # GIT_CURL_VERBOSE: 1
+    - name: Deploy with ssh
+      if: ${{ inputs.GITHUB_TOKEN && inputs.SSH_PRIVATE_KEY != 'false' }}
+      uses: s0/git-publish-subdir-action@develop
+      env:
+        REPO: git@github.com:${{ github.REPOSITORY }}.git
+        BRANCH: ${{ inputs.BRANCH }}
+        FOLDER: /home/runner/apt_repo
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        SSH_PRIVATE_KEY: ${{ inputs.SSH_PRIVATE_KEY }}
         SQUASH_HISTORY: ${{ inputs.SQUASH_HISTORY }}
         # GIT_TRACE_PACKET: 1
         # GIT_TRACE: 1
