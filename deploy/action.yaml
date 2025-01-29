@@ -47,6 +47,10 @@ runs:
         #for i in {1..50}; do head -c 50M </dev/urandom > /home/runner/apt_repo/repository/$i.deb; done
         #ls -al /home/runner/apt_repo/repository/
       shell: bash
+    - name: Increase buffer size for git push
+      run: |
+        git config --global http.postBuffer 524288000
+      shell: sh
     - name: Deploy
       id: deploy
       if: ${{ inputs.GITHUB_TOKEN }}
