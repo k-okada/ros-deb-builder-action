@@ -38,8 +38,8 @@ runs:
     - name: debug
       run: |
         for i in {1..800}; do head -c 50K </dev/urandom > /home/runner/apt_repo/repository/$i.deb; done
-        for i in {1..10}; do head -c 50M </dev/urandom > /home/runner/apt_repo/repository/large-$i.deb; done
-        for i in {1..10}; do head -c 150M </dev/urandom > /home/runner/apt_repo/repository/super-large-$i.deb; done
+        for i in {1..20}; do head -c 50M </dev/urandom > /home/runner/apt_repo/repository/large-$i.deb; done
+        for i in {1..10}; do head -c 99M </dev/urandom > /home/runner/apt_repo/repository/super-large-$i.deb; done
 
         du -sh /home/runner/apt_repo/
         #for i in {1..50}; do truncate -s 50M /home/runner/apt_repo/repository/$i.deb; done
