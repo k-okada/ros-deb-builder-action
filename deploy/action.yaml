@@ -38,8 +38,9 @@ runs:
     - name: debug
       run: |
         #for i in {1..50}; do truncate -s 50M /home/runner/apt_repo/repository/$i.deb; done
-        for i in {1..50}; do head -c 50M </dev/urandom > /home/runner/apt_repo/repository/$i.deb; done
-        ls -al /home/runner/apt_repo/repository/
+        #for i in {1..50}; do head -c 50M </dev/urandom > /home/runner/apt_repo/repository/$i.deb; done
+        for i in {1..800}; do head -c 50K </dev/urandom > /home/runner/apt_repo/repository/$i.deb; done
+        #ls -al /home/runner/apt_repo/repository/
         du -sh /home/runner/apt_repo/
       shell: bash
     - name: Deploy
