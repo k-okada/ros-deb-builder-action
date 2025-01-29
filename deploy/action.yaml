@@ -61,9 +61,9 @@ runs:
         FOLDER: /home/runner/apt_repo
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         SQUASH_HISTORY: ${{ inputs.SQUASH_HISTORY }}
-        # GIT_TRACE_PACKET: 1
-        # GIT_TRACE: 1
-        # GIT_CURL_VERBOSE: 1
+        GIT_TRACE_PACKET: 1
+        GIT_TRACE: 1
+        GIT_CURL_VERBOSE: 1
     - name: Deploy retry
       if: ${{ inputs.GITHUB_TOKEN }} && failure() && steps.deploy.outcome == 'failure'
       uses: s0/git-publish-subdir-action@develop
