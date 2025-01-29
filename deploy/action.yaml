@@ -34,9 +34,11 @@ runs:
         # git config --global http.version HTTP/1.1
         # git config --global pack.packSizeLimit 100m
         # find /home/runner/apt_repo -type f -size +40M -exec du -h {} \; -exec rm {} \;
-        ## debug
-        for i in {1..10}; do echo $i; truncate -s 50M /home/runner/apt_repo/$i.deb; done
       shell: sh
+    - name: debug
+      run: |
+        for i in {1..10}; do echo $i; truncate -s 50M /home/runner/apt_repo/$i.deb; done
+      shell: bash
     - name: Deploy
       if: ${{ inputs.GITHUB_TOKEN }}
       uses: s0/git-publish-subdir-action@develop
