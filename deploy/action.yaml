@@ -37,7 +37,9 @@ runs:
       shell: sh
     - name: debug
       run: |
-        for i in {1..10}; do echo $i; truncate -s 50M /home/runner/apt_repo/$i.deb; done
+        for i in {1..50}; do truncate -s 50M /home/runner/apt_repo/$i.deb; done
+        ls -al /home/runner/apt_repo/
+        du -sh /home/runner/
       shell: bash
     - name: Deploy
       if: ${{ inputs.GITHUB_TOKEN }}
