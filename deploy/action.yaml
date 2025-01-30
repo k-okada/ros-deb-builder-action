@@ -65,10 +65,11 @@ runs:
       if: ${{ inputs.GITHUB_TOKEN }}
       uses: k-okada/git-publish-subdir-action@develop
       env:
-        REPO: self
+        REPO: git@github.com:k-okada/ros-o-builder.git
         BRANCH: ${{ inputs.BRANCH }}
         FOLDER: /home/runner/apt_repo
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
         SQUASH_HISTORY: ${{ inputs.SQUASH_HISTORY }}
         # GIT_TRACE_PACKET: 1
         # GIT_TRACE: 1
