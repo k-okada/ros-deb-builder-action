@@ -50,6 +50,8 @@ runs:
     - name: Increase buffer size for git push
       run: |
         git config --global http.postBuffer 524288000
+        git config --list
+        mkdir ~/.git
         echo "[core]" | tee -a ~/.git/config
         echo "    packedGitLimit = 512m" | tee -a ~/.git/config
         echo "    packedGitWindowSize = 512m" | tee -a ~/.git/config
@@ -57,6 +59,7 @@ runs:
         echo "    deltaCacheSize = 2047m" | tee -a ~/.git/config
         echo "    packSizeLimit = 2047m" | tee -a ~/.git/config
         echo "    windowMemory = 2047m" | tee -a ~/.git/config
+        git config --list
       shell: sh
     - name: Deploy
       id: deploy
