@@ -51,14 +51,13 @@ runs:
       run: |
         git config --global http.postBuffer 524288000
         git config --list
-        mkdir ~/.git
-        echo "[core]" | tee -a ~/.git/config
-        echo "    packedGitLimit = 512m" | tee -a ~/.git/config
-        echo "    packedGitWindowSize = 512m" | tee -a ~/.git/config
-        echo "[pack]" | tee ~/.git/config
-        echo "    deltaCacheSize = 2047m" | tee -a ~/.git/config
-        echo "    packSizeLimit = 2047m" | tee -a ~/.git/config
-        echo "    windowMemory = 2047m" | tee -a ~/.git/config
+        echo "[core]" | tee -a ~/.gitconfig
+        echo "    packedGitLimit = 512m" | tee -a ~/.gitconfig
+        echo "    packedGitWindowSize = 512m" | tee -a ~/.gitconfig
+        echo "[pack]" | tee ~/.gitconfig
+        echo "    deltaCacheSize = 2047m" | tee -a ~/.gitconfig
+        echo "    packSizeLimit = 2047m" | tee -a ~/.gitconfig
+        echo "    windowMemory = 2047m" | tee -a ~/.gitconfig
         git config --list
       shell: sh
     - name: Deploy
