@@ -16,6 +16,10 @@ inputs:
     description: If set to true, all previous commits on the target branch will be discarded.
     required: false
     default: false
+  DEPLOY_PRIVATE_KEY:
+    description: If set to true, all previous commits on the target branch will be discarded.
+    required: false
+    default: false
 runs:
   using: composite
   steps:
@@ -69,7 +73,7 @@ runs:
         BRANCH: ${{ inputs.BRANCH }}
         FOLDER: /home/runner/apt_repo
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+        SSH_PRIVATE_KEY: ${{ inputs.DEPLOY_PRIVATE_KEY }}
         SQUASH_HISTORY: ${{ inputs.SQUASH_HISTORY }}
         # GIT_TRACE_PACKET: 1
         # GIT_TRACE: 1
