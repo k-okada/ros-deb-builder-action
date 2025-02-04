@@ -68,6 +68,9 @@ runs:
       run: |
         git config --list
         pwd
+        ls -al
+        git status
+        git log --oneline | head -10
       shell: sh
     - name: Deploy
       id: deploy
