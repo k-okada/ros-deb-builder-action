@@ -64,6 +64,11 @@ runs:
     #     echo "    windowMemory = 2047m" | tee -a ~/.gitconfig
     #     git config --list
     #   shell: sh
+    - name: check
+      run: |
+        git config --list
+        pwd
+      shell: sh
     - name: Deploy
       id: deploy
       uses: k-okada/git-publish-subdir-action@develop
